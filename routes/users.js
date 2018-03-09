@@ -7,10 +7,11 @@ var neo4j = require('../data_source/neo4j');
 /* GET users listing. */
 router.get('/', function (req, res, next) {
     var session = neo4j.getSession();
+    var main = {};
+    var userList = [];
     session
         .run('MATCH (n:User) RETURN n')
         .then(function (result) {
-            var userList = [];
             //console.log(result);
 
             result.records.forEach(function(record){
@@ -21,7 +22,9 @@ router.get('/', function (req, res, next) {
                 })
             });
             neo4j.closeSession(session);
-            res.send(userList);
+            main.type = 'User_Data';
+            main.data = userList;
+            res.send(JSON.stringify(main));
         });
 
 });
